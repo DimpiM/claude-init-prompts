@@ -1,0 +1,7 @@
+# Generierte Inhalte lokal halten; Struktur + Protokoll bleiben eingecheckt.
+# Sollen die Ausgaben mit dem Team geteilt werden: die Zeile "*" entfernen.
+*
+!*/
+!.gitignore
+!_protocol.md
+!.gitkeep

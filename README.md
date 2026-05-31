@@ -9,9 +9,9 @@ demselben Stand.
 
 - **Im Repo statt im lokalen Memory.** Wer das Zielprojekt klont, hat automatisch den aktuellen Stand.
 - **Lazy.** Beim Start wird nichts geladen; Claude konsultiert ein Subsystem erst, wenn es gebraucht wird.
-- **Komponierbar & reihenfolgeunabhängig.** Die Module berühren zwei geteilte Dateien – `CLAUDE.md`
-  und `.mcp.json` – und **führen dort zusammen, statt zu überschreiben**. Du kannst sie einzeln und
-  in beliebiger Reihenfolge einrichten.
+- **Komponierbar & reihenfolgeunabhängig.** Module berühren höchstens zwei geteilte Dateien –
+  `CLAUDE.md` und `.mcp.json` – und **führen dort zusammen, statt zu überschreiben**. Du kannst sie
+  einzeln und in beliebiger Reihenfolge einrichten.
 
 ## Module
 
@@ -19,6 +19,7 @@ demselben Stand.
 | --- | --- | --- |
 | [`obsidian/`](./obsidian) | Projekt-Gehirn (`_brain/vault/`) | Persistentes Wissensgedächtnis: Entscheidungen, Architektur-Zusammenhänge, Learnings, Konventionen und Domänenbegriffe als verlinkte Markdown-Notizen, angebunden über den dateisystem-nativen `obsidian-mcp` (Suche/Tags). |
 | [`context7/`](./context7) | Code-Doku-Cache (`_brain/code-docs/`) | Holt vor dem Coden versions-spezifische Library-Doku über Context7 und legt sie lokal als Cache ab, um wiederholte API-Calls zu vermeiden. Versionierung über Git + Manifest. |
+| [`workspace/`](./workspace) | Arbeitsausgabe (`_brain/workspace/`) | Sammelt von Claude erzeugte, nicht zum Projekt gehörende Dateien (Skripte, Analysen, Reports, Notizen, Temp) strukturiert unter `_brain/workspace/`, damit der Projektbaum sauber bleibt. Ohne MCP/Installation, nur eine `CLAUDE.md`-Regel. |
 
 Einstiegspunkt je Modul ist die Datei `setup.md` im jeweiligen Ordner – das ist der
 auszuführende Setup-Prompt.
@@ -32,6 +33,7 @@ Claude ihre `setup.md` **ausführen** (nicht nur lesen):
 > diesem Projekt aus:
 > https://github.com/DimpiM/claude-init-prompts/tree/main/context7
 > https://github.com/DimpiM/claude-init-prompts/tree/main/obsidian
+> https://github.com/DimpiM/claude-init-prompts/tree/main/workspace
 
 Claude Code legt dann die Modul-Dateien an und führt `CLAUDE.md` / `.mcp.json` zusammen.
 Anschließend im Zielprojekt **committen und pushen** – ab dann arbeitest du einfach normal
@@ -44,6 +46,7 @@ scheitert. Direkter und stabiler ist die Raw-URL der jeweiligen `setup.md`:
 
 > https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/context7/setup.md
 > https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/obsidian/setup.md
+> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/workspace/setup.md
 
 ## Was im Zielprojekt entsteht
 
@@ -53,7 +56,8 @@ scheitert. Direkter und stabiler ist die Raw-URL der jeweiligen `setup.md`:
 ├── .mcp.json             # projekt-skopierte MCP-Server (zusammengeführt)
 └── _brain/
     ├── vault/            # obsidian-Modul: das Gehirn
-    └── code-docs/        # context7-Modul: der Doku-Cache
+    ├── code-docs/        # context7-Modul: der Doku-Cache
+    └── workspace/        # workspace-Modul: generierte Dateien
 ```
 
 ## Voraussetzungen
