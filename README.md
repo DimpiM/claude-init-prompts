@@ -20,15 +20,30 @@ demselben Stand.
 | [`obsidian/`](./obsidian) | Projekt-Gehirn (`_brain/vault/`) | Persistentes Wissensgedächtnis: Entscheidungen, Architektur-Zusammenhänge, Learnings, Konventionen und Domänenbegriffe als verlinkte Markdown-Notizen, angebunden über den dateisystem-nativen `obsidian-mcp` (Suche/Tags). |
 | [`context7/`](./context7) | Code-Doku-Cache (`_brain/code-docs/`) | Holt vor dem Coden versions-spezifische Library-Doku über Context7 und legt sie lokal als Cache ab, um wiederholte API-Calls zu vermeiden. Versionierung über Git + Manifest. |
 
+Einstiegspunkt je Modul ist die Datei `setup.md` im jeweiligen Ordner – das ist der
+auszuführende Setup-Prompt.
+
 ## Verwendung
 
-1. Im **Zielprojekt** eine Claude-Code-Session starten.
-2. Den Inhalt des gewünschten Setup-Prompts aus dem passenden Ordner (z. B. `obsidian/` oder
-   `context7/`) einfügen.
-3. Claude Code legt die Modul-Dateien an und führt `CLAUDE.md` / `.mcp.json` zusammen.
-4. Im Zielprojekt **committen und pushen**.
-5. Ab dann einfach arbeiten („ich möchte xy"): Die `CLAUDE.md` leitet Claude automatisch ins Gehirn
-   bzw. an den Doku-Cache – ohne dass du die Subsysteme erwähnen musst.
+In der Claude-Code-Session des **Zielprojekts** nennst du die gewünschten Module per URL und lässt
+Claude ihre `setup.md` **ausführen** (nicht nur lesen):
+
+> Ich möchte diese Module einrichten – hol dir jeweils die `setup.md` und führe ihre Anweisungen in
+> diesem Projekt aus:
+> https://github.com/DimpiM/claude-init-prompts/tree/main/context7
+> https://github.com/DimpiM/claude-init-prompts/tree/main/obsidian
+
+Claude Code legt dann die Modul-Dateien an und führt `CLAUDE.md` / `.mcp.json` zusammen.
+Anschließend im Zielprojekt **committen und pushen** – ab dann arbeitest du einfach normal
+(„ich möchte xy"), und die `CLAUDE.md` leitet Claude automatisch ins Gehirn bzw. an den Doku-Cache,
+ohne dass du die Subsysteme erwähnen musst.
+
+**Zuverlässiger per Raw-URL.** Eine `tree/...`-URL ist die HTML-Ordneransicht; Claude Code muss daraus
+erst die Datei finden und ihren Rohinhalt nachladen, was gelegentlich an GitHubs Zugriffsschutz
+scheitert. Direkter und stabiler ist die Raw-URL der jeweiligen `setup.md`:
+
+> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/context7/setup.md
+> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/obsidian/setup.md
 
 ## Was im Zielprojekt entsteht
 
@@ -52,7 +67,7 @@ demselben Stand.
 
 ## Prinzipien (für eigene Module)
 
-Ein neues Modul folgt demselben Muster: eigener Ordner hier im Repo mit einem Setup-Prompt, der im
-Zielprojekt ein eigenes `_brain/<name>/`-Subsystem samt Protokoll anlegt und sich über die beiden
-geteilten Dateien (`CLAUDE.md`, `.mcp.json`) **mergt statt überschreibt**. So bleiben alle Module
-unabhängig und beliebig kombinierbar.
+Ein neues Modul folgt demselben Muster: ein eigener Ordner hier im Repo mit genau einer `setup.md`
+als Einstiegs-Prompt. Diese legt im Zielprojekt ein eigenes `_brain/<name>/`-Subsystem samt Protokoll
+an und **mergt** sich über die beiden geteilten Dateien (`CLAUDE.md`, `.mcp.json`) **statt zu
+überschreiben**. So bleiben alle Module unabhängig und beliebig kombinierbar.
