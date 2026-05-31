@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "invalidateOnVersionChange": true,
+    "maxAgeDays": 30
+  },
+  "libraries": {}
+}

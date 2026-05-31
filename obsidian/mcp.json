@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "brain": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "obsidian-mcp",
+        "${CLAUDE_PROJECT_DIR:-.}/_brain/vault"
+      ]
+    }
+  }
+}
