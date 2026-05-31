@@ -5,12 +5,22 @@ unter `_brain/vault/` ein. Dieses Modul ist **eigenständig** – es funktionier
 ob bereits andere `_brain`-Subsysteme (z. B. der Code-Doku-Cache) eingerichtet sind, und
 **überschreibt vorhandene `CLAUDE.md`/`.mcp.json` nicht**.
 
+> Hinweis: Führe dieses Setup **nicht** im Plan-Modus aus – dort werden keine Dateien geschrieben,
+> und der `brain`-MCP findet anschließend keinen Vault. Lass das Setup real laufen, committe das
+> Ergebnis und starte Claude Code danach einmal neu, damit der MCP den Vault findet.
+
 ## A) Dateien anlegen (wortwörtlich)
 
 Lege die unten zwischen `=== DATEI: ... ===` und `=== ENDE DATEI ===` stehenden Dateien an –
 **exakt** mit dem gezeigten Inhalt, nicht umformulieren, nicht kürzen, nicht ergänzen.
-Lege außerdem die fünf Unterordner `decisions/`, `learnings/`, `architecture/`, `conventions/`,
-`glossary/` unter `_brain/vault/` an und packe in jeden eine leere Datei `.gitkeep`.
+
+Lege außerdem an:
+- die fünf Unterordner `decisions/`, `learnings/`, `architecture/`, `conventions/`, `glossary/`
+  unter `_brain/vault/`, mit je einer leeren Datei `.gitkeep`;
+- den Ordner `_brain/vault/.obsidian/` mit den Dateien `app.json`, `appearance.json` und
+  `core-plugins.json`, **jeweils mit dem Inhalt `{}`**. Dieser `.obsidian`-Ordner ist zwingend –
+  ohne ihn akzeptiert der `brain`-MCP das Verzeichnis nicht als Vault. Er wird **mit eingecheckt**
+  (nicht in `.gitignore` aufnehmen). Ein laufendes Obsidian ist dafür nicht nötig.
 
 ## B) .mcp.json zusammenführen (NICHT überschreiben)
 
@@ -81,7 +91,8 @@ Node.js (>= 20) ist im Pfad verfügbar.
 1. Gib den entstandenen/veränderten Verzeichnisbaum aus.
 2. Weise mich auf zwei einmalige Schritte hin: (a) den `brain`-MCP beim nächsten Start einmal
    per Trust-Dialog bestätigen (ein Neustart von Claude Code ist nötig, damit die neue/geänderte
-   `.mcp.json` geladen wird), und (b) sicherstellen, dass Node.js >= 20 im Pfad verfügbar ist.
+   `.mcp.json` geladen wird und der MCP den frisch angelegten Vault findet), und (b) sicherstellen,
+   dass Node.js >= 20 im Pfad verfügbar ist.
 
 ---
 
@@ -280,6 +291,13 @@ Falls beim ersten Schreiben Unterordner oder `index.md` fehlen, lege sie an:
 `decisions/`, `learnings/`, `architecture/`, `conventions/`, `glossary/` und eine leere `index.md`,
 dann regeneriere `index.md` wie oben beschrieben.
 
+## Vault-Konfiguration (.obsidian)
+
+Der `brain`-MCP akzeptiert das Verzeichnis nur als Vault, wenn darin ein `.obsidian`-Ordner mit
+minimaler Konfiguration liegt (`app.json`, `appearance.json`, `core-plugins.json`, jeweils `{}`).
+Dieser Ordner wird beim Setup angelegt und **mit eingecheckt** – nicht löschen, nicht in
+`.gitignore` aufnehmen. Ein laufendes Obsidian ist dafür nicht nötig.
+
 === ENDE DATEI ===
 
 === DATEI: _brain/vault/index.md ===
@@ -304,4 +322,9 @@ Generierte Übersicht. Wird von Claude aus dem Frontmatter der Notizen aktualisi
 
 ---
 
-Lege außerdem an (leere Dateien): `_brain/vault/decisions/.gitkeep`, `_brain/vault/learnings/.gitkeep`, `_brain/vault/architecture/.gitkeep`, `_brain/vault/conventions/.gitkeep`, `_brain/vault/glossary/.gitkeep`.
+Lege außerdem an (leere Dateien): `_brain/vault/decisions/.gitkeep`,
+`_brain/vault/learnings/.gitkeep`, `_brain/vault/architecture/.gitkeep`,
+`_brain/vault/conventions/.gitkeep`, `_brain/vault/glossary/.gitkeep`.
+
+Und die Vault-Konfiguration (jeweils mit Inhalt `{}`): `_brain/vault/.obsidian/app.json`,
+`_brain/vault/.obsidian/appearance.json`, `_brain/vault/.obsidian/core-plugins.json`.

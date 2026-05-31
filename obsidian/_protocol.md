@@ -191,3 +191,10 @@ Siehe auch: [[...]]
 Falls beim ersten Schreiben Unterordner oder `index.md` fehlen, lege sie an:
 `decisions/`, `learnings/`, `architecture/`, `conventions/`, `glossary/` und eine leere `index.md`,
 dann regeneriere `index.md` wie oben beschrieben.
+
+## Vault-Konfiguration (.obsidian)
+
+Der `brain`-MCP akzeptiert das Verzeichnis nur als Vault, wenn darin ein `.obsidian`-Ordner mit
+minimaler Konfiguration liegt (`app.json`, `appearance.json`, `core-plugins.json`, jeweils `{}`).
+Dieser Ordner wird beim Setup angelegt und **mit eingecheckt** – nicht löschen, nicht in
+`.gitignore` aufnehmen. Ein laufendes Obsidian ist dafür nicht nötig.
