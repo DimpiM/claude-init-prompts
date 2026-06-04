@@ -1,0 +1,11 @@
+# Die globale ~/.config/git/ignore ignoriert pauschal jede CLAUDE.md.
+# Hier umgekehrt: Modul-Referenz-Dateien (z. B. obsidian/CLAUDE.md, auch in
+# zukünftigen Unterordnern) gehören ins Repo — nur die Root-CLAUDE.md
+# (Arbeitshilfe für dieses Repo) bleibt lokal.
+# Reihenfolge zählt: erst alle re-includen, dann die Root wieder ausschließen.
+!**/CLAUDE.md
+/CLAUDE.md
+
+# OS-/Editor-Müll
+.DS_Store
+*.swp

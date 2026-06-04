@@ -13,6 +13,25 @@ demselben Stand.
   `CLAUDE.md` und `.mcp.json` – und **führen dort zusammen, statt zu überschreiben**. Du kannst sie
   einzeln und in beliebiger Reihenfolge einrichten.
 
+## Was die Module bringen
+
+Jedes Modul löst ein konkretes, wiederkehrendes Problem im Arbeiten mit Claude Code:
+
+- **Projekt-Gehirn (`obsidian/`) – Wissen geht nicht verloren.** Sonst vergisst Claude zwischen
+  Sessions, *warum* etwas so gebaut wurde. Das Gehirn hält Entscheidungen, Architektur-Zusammenhänge
+  und Learnings im Repo fest – versioniert, team-geteilt und beim nächsten Klon sofort da. Es ersetzt
+  das flüchtige, lokale Memory.
+- **Code-Doku-Cache (`context7/`) – richtige API, richtige Version.** Statt gegen veraltetes
+  Trainingswissen zu coden, holt Claude die Doku der **tatsächlich installierten** Library-Version,
+  cached sie lokal und spart wiederholte API-Calls. Nach dem ersten Befüllen offline-fähig.
+- **Arbeitsausgabe (`workspace/`) – sauberer Projektbaum.** Hilfsskripte, Analysen, Reports und
+  Wegwerf-Dateien, die Claude *um* eine Aufgabe herum erzeugt, landen gebündelt unter
+  `_brain/workspace/` statt verstreut im Projekt. Ohne MCP, ohne Installation.
+
+Der Hebel liegt im Zusammenspiel: Weil alle drei demselben Muster folgen und nur zusammenführen statt
+zu überschreiben, kombinierst du genau die, die du brauchst – und Claude arbeitet mit projekteigenem
+Gedächtnis, aktueller Library-Doku und aufgeräumtem Projektbaum zugleich.
+
 ## Module
 
 | Ordner | Subsystem | Zweck |
