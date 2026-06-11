@@ -9,9 +9,9 @@ demselben Stand.
 
 - **Im Repo statt im lokalen Memory.** Wer das Zielprojekt klont, hat automatisch den aktuellen Stand.
 - **Lazy.** Beim Start wird nichts geladen; Claude konsultiert ein Subsystem erst, wenn es gebraucht wird.
-- **Komponierbar & reihenfolgeunabhängig.** Module berühren höchstens zwei geteilte Dateien –
-  `CLAUDE.md` und `.mcp.json` – und **führen dort zusammen, statt zu überschreiben**. Du kannst sie
-  einzeln und in beliebiger Reihenfolge einrichten.
+- **Komponierbar & reihenfolgeunabhängig.** Module berühren nur geteilte Projektdateien –
+  `CLAUDE.md`, `.mcp.json` und (bei Tool-Modulen) `.claude/settings.json` – und **führen dort
+  zusammen, statt zu überschreiben**. Du kannst sie einzeln und in beliebiger Reihenfolge einrichten.
 
 ## Was die Module bringen
 
@@ -27,10 +27,16 @@ Jedes Modul löst ein konkretes, wiederkehrendes Problem im Arbeiten mit Claude 
 - **Arbeitsausgabe (`workspace/`) – sauberer Projektbaum.** Hilfsskripte, Analysen, Reports und
   Wegwerf-Dateien, die Claude *um* eine Aufgabe herum erzeugt, landen gebündelt unter
   `_brain/workspace/` statt verstreut im Projekt. Ohne MCP, ohne Installation.
+- **Token-Optimierung (`rtk/`) – weniger Rauschen im Kontext.** Ein projekt-lokaler Hook schreibt
+  Bash-Befehle automatisch auf [RTK](https://github.com/rtk-ai/rtk) um und kürzt deren Ausgabe
+  (git/tests/build/lint/ls/grep/docker …) um 60–90 %, bevor sie in Claudes Kontext landet – ohne die
+  Lese-Treue von Quellcode zu opfern (aggressiver Datei-Lese-Modus bewusst aus). Spart Tokens und
+  verlängert Sessions.
 
-Der Hebel liegt im Zusammenspiel: Weil alle drei demselben Muster folgen und nur zusammenführen statt
-zu überschreiben, kombinierst du genau die, die du brauchst – und Claude arbeitet mit projekteigenem
-Gedächtnis, aktueller Library-Doku und aufgeräumtem Projektbaum zugleich.
+Der Hebel liegt im Zusammenspiel: Weil alle Module demselben Muster folgen und nur zusammenführen
+statt zu überschreiben, kombinierst du genau die, die du brauchst – und Claude arbeitet mit
+projekteigenem Gedächtnis, aktueller Library-Doku, aufgeräumtem Projektbaum und schlanken
+Befehlsausgaben zugleich.
 
 ## Module
 
@@ -39,6 +45,7 @@ Gedächtnis, aktueller Library-Doku und aufgeräumtem Projektbaum zugleich.
 | [`obsidian/`](./obsidian) | Projekt-Gehirn (`_brain/vault/`) | Persistentes Wissensgedächtnis: Entscheidungen, Architektur-Zusammenhänge, Learnings, Konventionen und Domänenbegriffe als verlinkte Markdown-Notizen, angebunden über den dateisystem-nativen `obsidian-mcp` (Suche/Tags). |
 | [`context7/`](./context7) | Code-Doku-Cache (`_brain/code-docs/`) | Holt vor dem Coden versions-spezifische Library-Doku über Context7 und legt sie lokal als Cache ab, um wiederholte API-Calls zu vermeiden. Versionierung über Git + Manifest. |
 | [`workspace/`](./workspace) | Arbeitsausgabe (`_brain/workspace/`) | Sammelt von Claude erzeugte, nicht zum Projekt gehörende Dateien (Skripte, Analysen, Reports, Notizen, Temp) strukturiert unter `_brain/workspace/`, damit der Projektbaum sauber bleibt. Ohne MCP/Installation, nur eine `CLAUDE.md`-Regel. |
+| [`rtk/`](./rtk) | Token-Optimierung (`_brain/rtk/`) | Projekt-lokaler `PreToolUse`-Hook, der Bash-Befehle auf [RTK](https://github.com/rtk-ai/rtk) umschreibt und deren Ausgabe um 60–90 % kürzt. Binary-Installation statt MCP; aggressiver Datei-Lese-Modus bewusst aus, Code wird in voller Treue gelesen. |
 
 Einstiegspunkt je Modul ist die Datei `setup.md` im jeweiligen Ordner – das ist der
 auszuführende Setup-Prompt.
@@ -53,8 +60,9 @@ Claude ihre `setup.md` **ausführen** (nicht nur lesen):
 > https://github.com/DimpiM/claude-init-prompts/tree/main/context7
 > https://github.com/DimpiM/claude-init-prompts/tree/main/obsidian
 > https://github.com/DimpiM/claude-init-prompts/tree/main/workspace
+> https://github.com/DimpiM/claude-init-prompts/tree/main/rtk
 
-Claude Code legt dann die Modul-Dateien an und führt `CLAUDE.md` / `.mcp.json` zusammen.
+Claude Code legt dann die Modul-Dateien an und führt `CLAUDE.md` / `.mcp.json` / `.claude/settings.json` zusammen.
 Anschließend im Zielprojekt **committen und pushen** – ab dann arbeitest du einfach normal
 („ich möchte xy"), und die `CLAUDE.md` leitet Claude automatisch ins Gehirn bzw. an den Doku-Cache,
 ohne dass du die Subsysteme erwähnen musst.
@@ -66,6 +74,7 @@ scheitert. Direkter und stabiler ist die Raw-URL der jeweiligen `setup.md`:
 > https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/context7/setup.md
 > https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/obsidian/setup.md
 > https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/workspace/setup.md
+> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/rtk/setup.md
 
 ## Was im Zielprojekt entsteht
 
@@ -73,17 +82,20 @@ scheitert. Direkter und stabiler ist die Raw-URL der jeweiligen `setup.md`:
 <dein-projekt>/
 ├── CLAUDE.md              # schlankes Bootstrap/Routing (zusammengeführt)
 ├── .mcp.json             # projekt-skopierte MCP-Server (zusammengeführt)
+├── .claude/settings.json # projekt-lokale Hooks, z. B. RTK (zusammengeführt)
 └── _brain/
     ├── vault/            # obsidian-Modul: das Gehirn
     ├── code-docs/        # context7-Modul: der Doku-Cache
-    └── workspace/        # workspace-Modul: generierte Dateien
+    ├── workspace/        # workspace-Modul: generierte Dateien
+    └── rtk/              # rtk-Modul: Protokoll der Token-Optimierung
 ```
 
 ## Voraussetzungen
 
-- **Node.js >= 20** (die MCP-Server laufen über `npx`).
-- Nach dem Anlegen/Ändern der `.mcp.json` einmal **Claude Code neu starten** und den neuen
-  MCP-Server per **Trust-Dialog** bestätigen.
+- **Node.js >= 20** (die MCP-Server laufen über `npx`). Für `rtk/` **nicht** nötig – das ist ein
+  eigenständiges Binary (Install via `curl … | sh` oder Release-Binary, `~/.local/bin` im `PATH`).
+- Nach dem Anlegen/Ändern der `.mcp.json` **oder** eines Hooks in `.claude/settings.json` einmal
+  **Claude Code neu starten** und neue MCP-Server/Hooks per **Trust-Dialog** bestätigen.
 - **`context7`** funktioniert keyless mit niedrigeren Rate-Limits. Für höhere Limits und den
   optionalen Batch-Refresh einen `CONTEXT7_API_KEY` als Umgebungsvariable setzen.
 - **Keine Secrets einchecken** – API-Keys nur als Umgebungsvariablen.
@@ -92,5 +104,6 @@ scheitert. Direkter und stabiler ist die Raw-URL der jeweiligen `setup.md`:
 
 Ein neues Modul folgt demselben Muster: ein eigener Ordner hier im Repo mit genau einer `setup.md`
 als Einstiegs-Prompt. Diese legt im Zielprojekt ein eigenes `_brain/<name>/`-Subsystem samt Protokoll
-an und **mergt** sich über die beiden geteilten Dateien (`CLAUDE.md`, `.mcp.json`) **statt zu
-überschreiben**. So bleiben alle Module unabhängig und beliebig kombinierbar.
+an und **mergt** sich über die geteilten Dateien (`CLAUDE.md`, `.mcp.json` und – bei Tool-Modulen wie
+`rtk/` – `.claude/settings.json`) **statt zu überschreiben**. So bleiben alle Module unabhängig und
+beliebig kombinierbar.
