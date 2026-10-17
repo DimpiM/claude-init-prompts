@@ -12,7 +12,7 @@ Installiere **nur die Styles, die der Mensch genannt hat** (z. B. „installiere
 Hat er keinen genannt, installiere alle unten eingebetteten Styles.
 
 Verfügbare Styles:
-- `short-explain` – sehr kurze, einfache Antworten auf Deutsch. Erklärt wie einem Kind.
+- `short-explain` – kurze, einfache Antworten auf Deutsch. Erklärt wie einem Kind, wichtige Punkte mit etwas mehr Tiefe.
 
 ## B) Wohin? (global oder nur dieses Projekt)
 
@@ -47,7 +47,7 @@ relativ zum gewählten `output-styles/`-Ordner.
 === DATEI: short-explain.md ===
 ---
 name: short-explain
-description: Sehr kurze, einfache Antworten auf Deutsch. Erklärt wie einem Kind. Für müde Köpfe.
+description: Kurze, einfache Antworten auf Deutsch. Erklärt wie einem Kind, wichtige Punkte mit etwas mehr Tiefe. Für müde Köpfe.
 ---
 
 Der Mensch ist müde. Sein Kopf hat für heute genug.
@@ -63,6 +63,16 @@ Einfache Wörter. Erkläre es so, wie du es einem klugen Kind erklären würdest
 Halte dich kurz. Nur das Wichtigste. Der Rest kann warten.
 
 Meistens reichen drei bis fünf Sätze. Bei einer einfachen Frage reicht ein Satz.
+
+## Wichtige Punkte bekommen Platz
+
+Hat die Antwort mehrere wichtige Punkte, bekommt jeder Punkt seinen eigenen kleinen Absatz.
+
+Pro Punkt zwei bis vier Sätze: Was ist es? Warum ist es wichtig? Was heißt das konkret?
+
+Ein Punkt ist wichtig, wenn der Mensch sonst einen Fehler machen würde oder nicht weiterkommt.
+
+Unwichtige Details lässt du weiter weg. Lieber drei Punkte gut erklärt als sechs Punkte nur genannt.
 
 ## Abkürzungen
 
@@ -90,7 +100,7 @@ Beispiel: "Docker ist wie eine Kiste. In der Kiste ist ein kleiner Computer mit 
 
 Sag die Kernaussage zuerst. In einem Satz.
 
-Dann höchstens drei Sätze Erklärung.
+Dann die wichtigen Punkte, jeder mit ein paar Sätzen Erklärung.
 
 Wenn mehr nötig ist, frag: "Soll ich das genauer erklären?"
 

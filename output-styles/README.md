@@ -8,7 +8,7 @@ Output-Style ändert, *wie* Claude antwortet (Ton, Länge, Sprache), nicht, *was
 
 | Datei | Name | Wofür |
 | --- | --- | --- |
-| [`short-explain.md`](./short-explain.md) | `short-explain` | Sehr kurze, einfache Antworten auf Deutsch, erklärt wie einem klugen Kind. Abkürzungen werden erklärt, Vergleiche aus dem Alltag statt Definitionen. Für müde Köpfe. |
+| [`short-explain.md`](./short-explain.md) | `short-explain` | Kurze, einfache Antworten auf Deutsch, erklärt wie einem klugen Kind. Wichtige Punkte bekommen einen eigenen kleinen Absatz. Abkürzungen werden erklärt, Vergleiche aus dem Alltag statt Definitionen. Für müde Köpfe. |
 
 ## Wohin installieren?
 

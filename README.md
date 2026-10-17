@@ -28,7 +28,7 @@ Jedes Modul löst ein konkretes, wiederkehrendes Problem im Arbeiten mit Claude 
   Wegwerf-Dateien, die Claude *um* eine Aufgabe herum erzeugt, landen gebündelt unter
   `_brain/workspace/` statt verstreut im Projekt. Ohne MCP, ohne Installation.
 - **Output-Styles (`output-styles/`) – Antworten, wie du sie brauchst.** Fertige Antwortstile für
-  Claude Code, z. B. `short-explain` für sehr kurze, einfache Antworten auf Deutsch. Global oder pro
+  Claude Code, z. B. `short-explain` für kurze, einfache Antworten auf Deutsch. Global oder pro
   Projekt installierbar, jeder Style einzeln. Kein `_brain/`, kein MCP.
 
 Der Hebel liegt im Zusammenspiel: Weil die `_brain`-Module demselben Muster folgen und nur zusammenführen statt
