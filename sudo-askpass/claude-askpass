@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Grafische Passwortabfrage für sudo (SUDO_ASKPASS).
+#
+# sudo ruft dieses Skript auf, wenn kein Terminal vorhanden ist (so wie bei
+# Claude Code) und SUDO_ASKPASS darauf zeigt. Das Passwort geht über stdout
+# direkt an sudo. Abbrechen -> Exit-Code != 0 -> sudo bricht ab.
+#
+# Nutzt das erste vorhandene Dialog-Tool: yad, zenity, kdialog, ksshaskpass,
+# ssh-askpass.
+
+prompt="${1:-Passwort für sudo:}"
+title="sudo – Claude Code"
+
+# Der Elternprozess ist sudo selbst; seine Argumente zeigen den Befehl.
+cmd=$(ps -o args= -p "$PPID" 2>/dev/null)
+text_plain="Claude Code möchte mit sudo ausführen:
+${cmd}
+
+${prompt}"
+
+# Für yad/zenity (Pango-Markup) Sonderzeichen maskieren.
+esc=${cmd//&/&amp;}; esc=${esc//</&lt;}; esc=${esc//>/&gt;}
+text_markup="<b>Claude Code möchte mit sudo ausführen:</b>\n<tt>${esc}</tt>\n\n${prompt}"
+
+if command -v yad >/dev/null; then
+    exec yad --entry --hide-text --title="$title" \
+        --window-icon=dialog-password --image=dialog-password \
+        --text="$text_markup" \
+        --button="Abbrechen:1" --button="OK:0" \
+        --center --on-top --fixed --width=450
+elif command -v zenity >/dev/null; then
+    exec zenity --password --title="$title" 2>/dev/null
+elif command -v kdialog >/dev/null; then
+    exec kdialog --title "$title" --password "$text_plain"
+elif command -v ksshaskpass >/dev/null; then
+    exec ksshaskpass "$text_plain"
+elif [ -x /usr/lib/ssh/ssh-askpass ]; then
+    exec /usr/lib/ssh/ssh-askpass "$text_plain"
+fi
+
+echo "claude-askpass: kein Dialog-Tool gefunden (yad, zenity, kdialog, ksshaskpass)." >&2
+exit 1
