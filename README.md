@@ -34,6 +34,10 @@ Jedes Modul löst ein konkretes, wiederkehrendes Problem im Arbeiten mit Claude 
   hat kein Terminal für Passworteingaben, deshalb scheitert dort jedes `sudo`. Das Modul setzt
   `SUDO_ASKPASS`, und `sudo` öffnet ein kleines Passwortfenster. Claude sieht das Passwort nie.
   Global, kein `_brain/`, kein MCP.
+- **Clean Code (`clean-code/`) – sauberer Code nach festen Regeln.** Kurze, prüfbare Regeln für
+  jeden Code, dazu passend für Web-Apps, native Apps und Bash. Claude lädt sie automatisch beim
+  Schreiben. Der Skill `clean-code-check` prüft vorhandenen Code, ändert nichts und legt einen
+  Bericht mit neuen, offenen und behobenen Funden unter `_doku/clean-code-check/` ab.
 
 Der Hebel liegt im Zusammenspiel: Weil die `_brain`-Module demselben Muster folgen und nur zusammenführen statt
 zu überschreiben, kombinierst du genau die, die du brauchst – und Claude arbeitet mit projekteigenem
@@ -44,6 +48,7 @@ Gedächtnis, aktueller Library-Doku und aufgeräumtem Projektbaum zugleich.
 | Ordner | Subsystem | Zweck |
 | --- | --- | --- |
 | [`obsidian/`](./obsidian) | Projekt-Gehirn (`_brain/vault/`) | Persistentes Wissensgedächtnis: Entscheidungen, Architektur-Zusammenhänge, Learnings, Konventionen und Domänenbegriffe als verlinkte Markdown-Notizen, angebunden über den dateisystem-nativen `obsidian-mcp` (Suche/Tags). |
+| [`clean-code/`](./clean-code) | Clean-Code-Regeln (`.claude/rules/clean-code/`, `.claude/skills/clean-code-check/`, `_doku/clean-code-check/`) | Kurze, prüfbare Regeln mit festen IDs (allgemein, Web, nativ/MVVM, Bash), je nach erkanntem Projekttyp installiert und von Claude Code automatisch geladen. Dazu ein Skill, der vorhandenen Code prüft, nichts ändert und eingecheckte Berichte mit Verlauf (neu/offen/behoben) schreibt. Kein MCP, kein `_brain/`. |
 | [`context7/`](./context7) | Code-Doku-Cache (`_brain/code-docs/`) | Holt vor dem Coden versions-spezifische Library-Doku über Context7 und legt sie lokal als Cache ab, um wiederholte API-Calls zu vermeiden. Versionierung über Git + Manifest. |
 | [`output-styles/`](./output-styles) | Output-Styles (`~/.claude/output-styles/` oder `.claude/output-styles/`) | Fertige Antwortstile für Claude Code (aktuell: `short-explain`). Jeder Style einzeln installierbar, global oder pro Projekt. Berührt weder `CLAUDE.md` noch `.mcp.json`. |
 | [`sudo-askpass/`](./sudo-askpass) | sudo-Passwortfenster (`~/.local/bin/claude-askpass`, `~/.claude/settings.json`) | Lässt `sudo` in Claude Code ein grafisches Passwortfenster öffnen (über `SUDO_ASKPASS`), statt mangels Terminal zu scheitern. Global, mit `install.sh` auch ohne Claude installierbar. Berührt weder `CLAUDE.md` noch `.mcp.json`. |
@@ -101,6 +106,11 @@ Ohne Claude geht es auch per Hand: die Style-Datei nach `~/.claude/output-styles
 <dein-projekt>/
 ├── CLAUDE.md              # schlankes Bootstrap/Routing (zusammengeführt)
 ├── .mcp.json             # projekt-skopierte MCP-Server (zusammengeführt)
+├── .claude/
+│   ├── rules/clean-code/        # clean-code-Modul: die Regeln (automatisch geladen)
+│   └── skills/clean-code-check/ # clean-code-Modul: der Prüf-Skill
+├── _doku/
+│   └── clean-code-check/ # clean-code-Modul: Prüfberichte je Lauf (eingecheckt)
 └── _brain/
     ├── vault/            # obsidian-Modul: das Gehirn
     ├── code-docs/        # context7-Modul: der Doku-Cache
@@ -108,7 +118,9 @@ Ohne Claude geht es auch per Hand: die Style-Datei nach `~/.claude/output-styles
 ```
 
 Das `output-styles`-Modul legt nichts unter `_brain/` an. Es schreibt nur `<name>.md` nach
-`~/.claude/output-styles/` oder `.claude/output-styles/`.
+`~/.claude/output-styles/` oder `.claude/output-styles/`. Auch das `clean-code`-Modul nutzt kein
+`_brain/`: Regeln und Skill liegen dort, wo Claude Code sie von selbst findet (`.claude/`), die
+Berichte unter `_doku/clean-code-check/` (entsteht beim ersten Prüflauf).
 
 ## Voraussetzungen
 
