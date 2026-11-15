@@ -20,7 +20,7 @@ deshalb immer gleich vor: erkennen, vergleichen, nur Fehlendes oder Geändertes 
 
 Sieh dir das Projekt an (Dateien, Build-Konfiguration, Abhängigkeiten). Ignoriere dabei
 `node_modules/`, `vendor/`, `dist/`, `build/`, `.git/` und ähnliche erzeugte Ordner. Entscheide für
-jede der drei Fragen **ja** oder **nein**:
+jede der vier Fragen **ja** oder **nein**:
 
 1. **Web-App?** Ja, wenn es ein Web-Frontend und/oder ein Web-Backend gibt. Anzeichen: Frontend-Frameworks
    (React, Vue, Angular, Svelte, Next, Nuxt, …), HTML-Templates, Web-Server-Frameworks (Express, Fastify,
@@ -29,12 +29,20 @@ jede der drei Fragen **ja** oder **nein**:
    (`AndroidManifest.xml`), Flutter, WPF/WinUI/MAUI/Avalonia, GTK, React Native.
 3. **Bash-Skripte?** Ja, wenn es Dateien `*.sh` / `*.bash` gibt oder Dateien ohne Endung mit
    `#!/bin/bash` oder `#!/usr/bin/env bash` in der ersten Zeile. Ein reines `#!/bin/sh` zählt allein nicht.
+4. **Embedded?** Ja, wenn der Code auf einem Gerät läuft und nicht auf einem normalen PC oder Smartphone.
+   Anzeichen: Cross-Compile-Toolchain-Dateien, Yocto/Buildroot, Boot2Qt/Qt for Device Creation, Device
+   Trees (`*.dts`, `*.dtsi`), MCU-SDKs oder RTOS (Zephyr, FreeRTOS, STM32-HAL, ESP-IDF, PlatformIO,
+   Arduino). Linker-Skripte (`*.ld`) zählen nur zusammen mit anderen Anzeichen.
 
 Daraus ergeben sich die Regeldateien:
 - `allgemein.md` – **immer**.
 - `web.md` – nur bei Web-App.
 - `native.md` – nur bei nativer App.
 - `bash.md` – nur bei Bash-Skripten.
+- `embedded.md` – nur bei Embedded.
+
+Embedded mit Oberfläche (z. B. Qt/QML auf dem Gerät) bekommt **zusätzlich** `native.md`: QML ist die
+View, die C++-Klassen dahinter sind das ViewModel.
 
 **Nur wenn etwas unklar ist** (z. B. Electron/Tauri, reine Library, leeres Projekt), frag den Menschen
 **einmal**, mit allen unklaren Punkten in einer Frage. Ist alles klar, frag nicht.
@@ -87,7 +95,7 @@ Einzufügender Abschnitt:
 ## Clean Code
 
 Für den Code in diesem Projekt gelten die Clean-Code-Regeln unter `.claude/rules/clean-code/`.
-Claude Code lädt sie automatisch; jede Regel hat eine feste ID (A1…, W1…, N1…, B1…). Halte sie
+Claude Code lädt sie automatisch; jede Regel hat eine feste ID (A1…, W1…, N1…, B1…, E1…). Halte sie
 beim Schreiben und Ändern von Code ein. Die Regeln stehen nur dort – hier nicht wiederholen.
 
 Vorhandenen Code prüft der Skill `clean-code-check` (`/clean-code-check [teilpfad]`). Er ändert
@@ -245,6 +253,42 @@ Endung mit Shell-Shebang. IDs und Schwere wie dort.
 - **B5 – Höchstens ca. 200 Zeilen** (mittel)
   Ein Skript über ca. 200 Zeilen muss in eine richtige Programmiersprache umziehen (z. B. Python).
   Warum: Größere Bash-Programme werden schnell unlesbar, fehleranfällig und schwer zu testen.
+
+=== ENDE DATEI ===
+
+=== DATEI: .claude/rules/clean-code/embedded.md ===
+# Clean Code – Embedded
+
+Gilt zusätzlich zu `allgemein.md` für Code, der auf Geräten läuft (Embedded-Linux, Mikrocontroller).
+IDs und Schwere wie dort.
+
+- **E1 – Hardware-Zugriff hinter einer Schicht** (hoch)
+  Zugriff auf Register, Pins, Busse und Gerätedateien darf nur über eine dünne Abstraktionsschicht
+  (HAL, Hardware Abstraction Layer) laufen, nicht verstreut in der Fachlogik.
+  Warum: So wird die Logik ohne Gerät auf dem PC testbar und die Hardware austauschbar.
+
+- **E2 – Ressourcen räumen sich selbst auf** (hoch)
+  Speicher, Dateien, Handles und Locks müssen automatisch freigegeben werden (in C++: RAII bzw. Smart
+  Pointer oder Qt-Parent-Ownership). Kein rohes `new`/`delete` ohne klaren Besitzer. In C: jede Ressource
+  hat genau einen Besitzer; Anlegen und Freigeben stehen als Paar in derselben Schicht.
+  Warum: Lecks laufen auf Geräten mit wenig Speicher über Tage voll.
+
+- **E3 – Kein Speicher-Anfordern in zeitkritischen Pfaden** (hoch)
+  In Interrupts, Echtzeit-Schleifen und oft laufenden Pfaden darf kein Speicher dynamisch angefordert
+  werden. Er wird vorher angelegt und wiederverwendet.
+  Warum: Die Dauer einer Anforderung ist nicht vorhersagbar, und der Speicher zerfasert.
+
+- **E4 – Geteilte Daten sind geschützt** (hoch)
+  Daten, die mehrere Threads oder Thread und Interrupt gemeinsam nutzen, dürfen nur geschützt benutzt
+  werden (Mutex nur zwischen Threads; mit Interrupt: atomic, Interrupts kurz sperren oder eine Queue ohne
+  Sperre; in Qt: Signal-Slot über Thread-Grenzen). Keine ungeschützten geteilten globalen Variablen.
+  Warum: Solche Fehler treten selten und nicht reproduzierbar auf.
+
+- **E5 – Warten auf Ereignisse statt Schleifen** (mittel)
+  Auf Hardware oder Daten darf nicht mit Busy-Waiting oder festen `sleep`-Wartezeiten gewartet werden,
+  sondern mit Ereignissen, Interrupts, Timern oder Signalen. Vom Datenblatt vorgeschriebene kurze
+  Wartezeiten sind erlaubt, mit Kommentar und Quelle.
+  Warum: Das spart Strom und CPU, und das Timing hängt nicht von geratenen Zahlen ab.
 
 === ENDE DATEI ===
 

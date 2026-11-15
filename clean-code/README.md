@@ -20,7 +20,8 @@ bei und einen **Skill**, der vorhandenen Code dagegen prüft. **Kein MCP, kein `
 │   ├── allgemein.md     # gilt immer (A1–A9)
 │   ├── web.md           # nur bei Web-Apps (W1–W5)
 │   ├── native.md        # nur bei nativen Apps, MVVM (N1–N4)
-│   └── bash.md          # nur bei Bash-Skripten (B1–B5)
+│   ├── bash.md          # nur bei Bash-Skripten (B1–B5)
+│   └── embedded.md      # nur bei Embedded (E1–E5)
 └── skills/clean-code-check/
     └── SKILL.md         # der Prüf-Skill
 _doku/clean-code-check/
@@ -43,6 +44,9 @@ Jede Regel hat eine feste ID, eine Schwere (hoch / mittel / niedrig) und einen S
   ohne Oberfläche, lange Arbeiten im Hintergrund.
 - **Bash:** `set -euo pipefail` (reines POSIX-sh: `set -eu`), Variablen quoten, `shellcheck` ohne
   Warnungen, Logik in Funktionen mit `main`, über ca. 200 Zeilen in eine richtige Sprache umziehen.
+- **Embedded:** Hardware-Zugriff hinter einer Schicht (HAL), Ressourcen räumen sich selbst auf, kein
+  Speicher-Anfordern in zeitkritischen Pfaden, geteilte Daten geschützt, auf Ereignisse warten statt
+  in Schleifen. Embedded mit Oberfläche (z. B. Qt/QML) bekommt zusätzlich die Native-Regeln.
 
 Der genaue Wortlaut steht in der [`setup.md`](./setup.md).
 
