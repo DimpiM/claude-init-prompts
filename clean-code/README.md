@@ -17,7 +17,7 @@ bei und einen **Skill**, der vorhandenen Code dagegen prüft. **Kein MCP, kein `
 ```
 .claude/
 ├── rules/clean-code/
-│   ├── allgemein.md     # gilt immer (A1–A9)
+│   ├── allgemein.md     # gilt immer (A1–A10)
 │   ├── web.md           # nur bei Web-Apps (W1–W5)
 │   ├── native.md        # nur bei nativen Apps, MVVM (N1–N4)
 │   ├── bash.md          # nur bei Bash-Skripten (B1–B5)

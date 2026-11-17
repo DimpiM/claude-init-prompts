@@ -167,6 +167,17 @@ Gilt für jeden Code in diesem Projekt. Jede Regel hat eine feste ID und eine Sc
   ohne diese getestet werden kann.
   Warum: Gemischter Code lässt sich nur mit großem Aufwand oder gar nicht testen.
 
+- **A10 – Code ist auf Englisch** (mittel)
+  Alle Namen (Variablen, Funktionen, Klassen, Dateien, Datenbank-Spalten usw.) und Kommentare im Code
+  müssen englisch sein. Das gilt auch für Log-Meldungen und Fehlertexte für Entwickler (z. B. Exceptions,
+  Debug-Ausgaben). Keine Ausnahme für bestehenden Code: Auch vorhandene deutsche Namen und Kommentare
+  sind Funde. Nicht betroffen sind Texte, die der Nutzer sieht (UI-Texte, Fehlermeldungen an Nutzer,
+  Übersetzungsdateien); sie bleiben in der Sprache der Nutzer. Fachbegriffe ohne gute englische
+  Entsprechung (z. B. `Steuerbescheid`, `Beihilfe`) dürfen deutsch bleiben, aber immer gleich geschrieben.
+  Im Zweifel ist es ein Fund; der Bericht vermerkt dann, dass es ein Fachbegriff sein könnte.
+  Warum: Programmiersprachen und Bibliotheken sind englisch; gemischte Namen wie `getKundeById` lesen
+  sich schlecht, und nicht jeder im Team versteht Deutsch.
+
 === ENDE DATEI ===
 
 === DATEI: .claude/rules/clean-code/web.md ===
