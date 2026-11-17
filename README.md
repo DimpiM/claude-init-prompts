@@ -1,9 +1,9 @@
 # claude-init-prompts
 
 Eine Sammlung modularer **Setup-Prompts für Claude Code**. Jeder Prompt wird in der Claude-Code-
-Session eines *Zielprojekts* eingefügt und richtet dort ein eigenständiges Wissens-Subsystem unter
-`_brain/` ein. Alles liegt im Projekt-Repo – damit über Git geteilt, versioniert und im Team auf
-demselben Stand.
+Session eines *Zielprojekts* eingefügt und richtet dort ein eigenständiges Subsystem ein – meist
+unter `_brain/`. Alles liegt im Projekt-Repo – damit über Git geteilt, versioniert und im Team auf
+demselben Stand. Wenige Module (`output-styles`, `sudo-askpass`) wirken global auf deinem Rechner.
 
 ## Idee
 
@@ -35,7 +35,7 @@ Jedes Modul löst ein konkretes, wiederkehrendes Problem im Arbeiten mit Claude 
   `SUDO_ASKPASS`, und `sudo` öffnet ein kleines Passwortfenster. Claude sieht das Passwort nie.
   Global, kein `_brain/`, kein MCP.
 - **Clean Code (`clean-code/`) – sauberer Code nach festen Regeln.** Kurze, prüfbare Regeln für
-  jeden Code, dazu passend für Web-Apps, native Apps, Bash und Embedded. Claude lädt sie automatisch beim
+  jeden Code (u. a.: Code ist auf Englisch), dazu passend für Web-Apps, native Apps, Bash und Embedded. Claude lädt sie automatisch beim
   Schreiben. Der Skill `clean-code-check` prüft vorhandenen Code, ändert nichts und legt einen
   Bericht mit neuen, offenen und behobenen Funden unter `_doku/clean-code-check/` ab.
 
@@ -55,40 +55,40 @@ Gedächtnis, aktueller Library-Doku und aufgeräumtem Projektbaum zugleich.
 | [`workspace/`](./workspace) | Arbeitsausgabe (`_brain/workspace/`) | Sammelt von Claude erzeugte, nicht zum Projekt gehörende Dateien (Skripte, Analysen, Reports, Notizen, Temp) strukturiert unter `_brain/workspace/`, damit der Projektbaum sauber bleibt. Ohne MCP/Installation, nur eine `CLAUDE.md`-Regel. |
 
 Einstiegspunkt je Modul ist die Datei `setup.md` im jeweiligen Ordner – das ist der
-auszuführende Setup-Prompt.
+auszuführende Setup-Prompt. [`install.md`](./install.md) im Repo-Root bietet alle Module zur
+Auswahl an und führt die gewählten `setup.md` nacheinander aus.
 
 ## Verwendung
 
-In der Claude-Code-Session des **Zielprojekts** nennst du die gewünschten Module per URL und lässt
-Claude ihre `setup.md` **ausführen** (nicht nur lesen):
+### Empfohlen: Auswahl-Installer
 
-> Ich möchte diese Module einrichten – hol dir jeweils die `setup.md` und führe ihre Anweisungen in
-> diesem Projekt aus:
-> https://github.com/DimpiM/claude-init-prompts/tree/main/context7
-> https://github.com/DimpiM/claude-init-prompts/tree/main/obsidian
-> https://github.com/DimpiM/claude-init-prompts/tree/main/workspace
+In der Claude-Code-Session des **Zielprojekts** (nicht im Plan-Modus) sagst du:
 
-Claude Code legt dann die Modul-Dateien an und führt `CLAUDE.md` / `.mcp.json` zusammen.
-Anschließend im Zielprojekt **committen und pushen** – ab dann arbeitest du einfach normal
-(„ich möchte xy"), und die `CLAUDE.md` leitet Claude automatisch ins Gehirn bzw. an den Doku-Cache,
-ohne dass du die Subsysteme erwähnen musst.
+> Hol dir https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/install.md und führe sie aus.
 
-**Zuverlässiger per Raw-URL.** Eine `tree/...`-URL ist die HTML-Ordneransicht; Claude Code muss daraus
-erst die Datei finden und ihren Rohinhalt nachladen, was gelegentlich an GitHubs Zugriffsschutz
-scheitert. Direkter und stabiler ist die Raw-URL der jeweiligen `setup.md`:
-
-> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/context7/setup.md
-> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/obsidian/setup.md
-> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/workspace/setup.md
+Claude zeigt dir alle Module als Ankreuz-Liste – getrennt nach Projektmodulen und globalen Modulen
+für deinen Rechner. Es richtet nur die angehakten ein, führt `CLAUDE.md` / `.mcp.json` zusammen und
+sammelt am Ende die Hinweise (Neustart, Trust-Dialog). Anschließend im Zielprojekt **committen und
+pushen** – ab dann arbeitest du einfach normal („ich möchte xy"), und die `CLAUDE.md` leitet Claude
+automatisch ins Gehirn, an den Doku-Cache usw., ohne dass du die Subsysteme erwähnen musst.
 
 ### Module einzeln installieren
 
-Jedes Modul funktioniert allein. Für genau ein Modul nennst du nur dessen `setup.md`:
+Jedes Modul funktioniert allein. Du nennst Claude die Raw-URL seiner `setup.md` und lässt sie
+**ausführen** (nicht nur lesen):
 
-> Hol dir diese `setup.md` und führe ihre Anweisungen in diesem Projekt aus:
-> https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/workspace/setup.md
+> Hol dir diese `setup.md` und führe ihre Anweisungen in diesem Projekt aus: `<Raw-URL>`
 
-Weitere Module kannst du später jederzeit nachziehen. Die Reihenfolge ist egal.
+- `obsidian`: https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/obsidian/setup.md
+- `context7`: https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/context7/setup.md
+- `workspace`: https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/workspace/setup.md
+- `clean-code`: https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/clean-code/setup.md
+- `output-styles`: https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/output-styles/setup.md
+- `sudo-askpass`: https://raw.githubusercontent.com/DimpiM/claude-init-prompts/main/sudo-askpass/setup.md
+
+Mehrere URLs in einer Nachricht gehen auch. Weitere Module kannst du später jederzeit nachziehen;
+die Reihenfolge ist egal. Nimm die **Raw-URL**, nicht die `tree/...`-Ordneransicht – die muss Claude
+erst auflösen, und das scheitert gelegentlich an GitHubs Zugriffsschutz.
 
 **Output-Styles** gehen auch einzeln, Style für Style. Nenne den Namen und den Ort (global oder
 nur dieses Projekt):
@@ -108,7 +108,8 @@ Ohne Claude geht es auch per Hand: die Style-Datei nach `~/.claude/output-styles
 ├── .mcp.json             # projekt-skopierte MCP-Server (zusammengeführt)
 ├── .claude/
 │   ├── rules/clean-code/        # clean-code-Modul: die Regeln (automatisch geladen)
-│   └── skills/clean-code-check/ # clean-code-Modul: der Prüf-Skill
+│   ├── skills/clean-code-check/ # clean-code-Modul: der Prüf-Skill
+│   └── output-styles/           # output-styles-Modul, nur bei Installation pro Projekt
 ├── _doku/
 │   └── clean-code-check/ # clean-code-Modul: Prüfberichte je Lauf (eingecheckt)
 └── _brain/
@@ -117,10 +118,12 @@ Ohne Claude geht es auch per Hand: die Style-Datei nach `~/.claude/output-styles
     └── workspace/        # workspace-Modul: generierte Dateien
 ```
 
-Das `output-styles`-Modul legt nichts unter `_brain/` an. Es schreibt nur `<name>.md` nach
-`~/.claude/output-styles/` oder `.claude/output-styles/`. Auch das `clean-code`-Modul nutzt kein
-`_brain/`: Regeln und Skill liegen dort, wo Claude Code sie von selbst findet (`.claude/`), die
-Berichte unter `_doku/clean-code-check/` (entsteht beim ersten Prüflauf).
+Das `clean-code`-Modul nutzt kein `_brain/`: Regeln und Skill liegen dort, wo Claude Code sie von
+selbst findet (`.claude/`), die Berichte unter `_doku/clean-code-check/` (entsteht beim ersten
+Prüflauf). Das `output-styles`-Modul schreibt nur `<name>.md` nach `~/.claude/output-styles/` oder,
+pro Projekt, nach `.claude/output-styles/`. Das `sudo-askpass`-Modul fasst das Zielprojekt gar
+nicht an: Es legt `~/.local/bin/claude-askpass` an und setzt `env.SUDO_ASKPASS` in
+`~/.claude/settings.json`.
 
 ## Voraussetzungen
 
@@ -137,3 +140,10 @@ Ein neues Modul folgt demselben Muster: ein eigener Ordner hier im Repo mit gena
 als Einstiegs-Prompt. Diese legt im Zielprojekt ein eigenes `_brain/<name>/`-Subsystem samt Protokoll
 an und **mergt** sich über die beiden geteilten Dateien (`CLAUDE.md`, `.mcp.json`) **statt zu
 überschreiben**. So bleiben alle Module unabhängig und beliebig kombinierbar.
+
+Module ohne `_brain/` (wie `clean-code`, `output-styles`, `sudo-askpass`) legen ihre Dateien dort ab,
+wo Claude Code sie von selbst findet, und sagen im README klar, ob sie pro Projekt oder global wirken.
+
+Jedes neue Modul gehört außerdem in die Modulliste von [`install.md`](./install.md) (in die passende
+Gruppe: Projekt oder global) – sonst taucht es im Auswahl-Installer nicht auf. Dazu hier oben in
+die Tabelle, „Was die Module bringen" und „Module einzeln installieren".
